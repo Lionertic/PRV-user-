@@ -155,6 +155,8 @@ public class Routes extends AsyncTask<String, Void, String> implements WorkerRes
                     @Override
                     public void onResponse(String response) {
                         try {
+                            MainActivity.progressDialog.dismiss();
+
                             JSONObject jsonObject = new JSONObject(response);
                             for(int i=0;i<jsonObject.getInt("no");i++){
                                 LatLng lo = new LatLng(jsonObject.getJSONArray(i + "co").getDouble(0), jsonObject.getJSONArray(i + "co").getDouble(1));
@@ -163,7 +165,6 @@ public class Routes extends AsyncTask<String, Void, String> implements WorkerRes
                                     Maps.drv[i] = Maps.mMap.addMarker(new MarkerOptions().position(lo).title("TEST"));
                                     route(jsonObject.getJSONObject(Integer.toString(i)), Color.GREEN, i, prev[i], lo);
                                     prev[i] = new LatLng(lo.latitude, lo.longitude);
-                                    MainActivity.progressDialog.dismiss();
                                 }
                                 route(jsonObject.getJSONObject(Integer.toString(i)), Color.GREEN, i, prev[i], lo);
                                 prev[i] = new LatLng(lo.latitude, lo.longitude);

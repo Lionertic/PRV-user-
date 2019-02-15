@@ -234,6 +234,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
                 Map<String, String> params = new HashMap<>();
                 params.put("lat", Double.toString(onChange.getLatitude()));
                 params.put("lon", Double.toString(onChange.getLongitude()));
+                params.put("key",MainActivity.KEY);
                 return params;
             }
         };
