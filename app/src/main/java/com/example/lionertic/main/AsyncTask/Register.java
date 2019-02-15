@@ -67,6 +67,7 @@ public class Register extends AsyncTask<String, Void, Void> {
                 Map<String, String> params = new HashMap<>();
                 params.put("mob", strings[0]);
                 params.put("pass", strings[1]);
+                params.put("imei",strings[2]);
                 return params;
             }
         };

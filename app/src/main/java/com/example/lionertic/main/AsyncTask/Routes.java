@@ -3,7 +3,6 @@ package com.example.lionertic.main.AsyncTask;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -48,14 +47,15 @@ import java.util.Map;
 public class Routes extends AsyncTask<String, Void, String> implements WorkerResultReceiver.Receiver {
 
     Context context;
-    static LatLng prev1=null,prev2=null;
-    static int i =0;
+    static LatLng prev[] = new LatLng[2];
     WorkerResultReceiver mWorkerResultReceiver;
     static double time = 0;
 
 
     public Routes(Context cnt) {
         context=cnt;
+        prev[0]=null;
+        prev[1]=null;
     }
 
     private void animateCarMove(final Marker marker, final LatLng beginLatLng, final LatLng endLatLng, final long duration ) {
@@ -104,7 +104,6 @@ public class Routes extends AsyncTask<String, Void, String> implements WorkerRes
     }
     private void route(JSONObject jObject, int c, int dr,LatLng o,LatLng d) {
         if(o!=null){
-            Log.e("imter","1234567890");
             List<LatLng> l = new ArrayList<>();
             l.add(o);
             l.add(d);
@@ -157,31 +156,17 @@ public class Routes extends AsyncTask<String, Void, String> implements WorkerRes
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            LatLng lo1=new LatLng(jsonObject.getJSONArray(urls[0]+"co").getDouble(0),jsonObject.getJSONArray(urls[0]+"co").getDouble(1));
+                            for(int i=0;i<jsonObject.getInt("no");i++){
+                                LatLng lo = new LatLng(jsonObject.getJSONArray(i + "co").getDouble(0), jsonObject.getJSONArray(i + "co").getDouble(1));
 
-                            if(prev1==null){
-                                Log.e("checklatlong","false"+lo1.toString()+prev1);
-                                Maps.drv[0]=Maps.mMap.addMarker(new MarkerOptions().position(lo1).title("TEST"));
-                                route(jsonObject.getJSONObject(urls[0]),Color.GREEN,0,prev1,lo1);
-                                prev1=new LatLng(lo1.latitude,lo1.longitude);
-                            }
-                            route(jsonObject.getJSONObject(urls[0]),Color.GREEN,0,prev1,lo1);
-                            prev1=new LatLng(lo1.latitude,lo1.longitude);
-
-                            MainActivity.progressDialog.dismiss();
-                            if (!(urls[1].equals(""))) {
-                                LatLng lo2=new LatLng(jsonObject.getJSONArray(urls[1]+"co").getDouble(0),jsonObject.getJSONArray(urls[1]+"co").getDouble(1));
-
-                                if(prev1==null){
-                                    Log.e("checklatlong","false"+lo1.toString()+prev1);
-                                    Maps.drv[0]=Maps.mMap.addMarker(new MarkerOptions().position(lo1).title("TEST"));
-                                    route(jsonObject.getJSONObject(urls[1]),Color.GREEN,0,prev2,lo2);
-                                    prev2=new LatLng(lo2.latitude,lo2.longitude);
+                                if (prev[i] == null) {
+                                    Maps.drv[i] = Maps.mMap.addMarker(new MarkerOptions().position(lo).title("TEST"));
+                                    route(jsonObject.getJSONObject(Integer.toString(i)), Color.GREEN, i, prev[i], lo);
+                                    prev[i] = new LatLng(lo.latitude, lo.longitude);
+                                    MainActivity.progressDialog.dismiss();
                                 }
-                                route(jsonObject.getJSONObject(urls[1]),Color.GREEN,0,prev2,lo2);
-                                prev2=new LatLng(lo2.latitude,lo2.longitude);
-
-
+                                route(jsonObject.getJSONObject(Integer.toString(i)), Color.GREEN, i, prev[i], lo);
+                                prev[i] = new LatLng(lo.latitude, lo.longitude);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -200,9 +185,7 @@ public class Routes extends AsyncTask<String, Void, String> implements WorkerRes
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("key1", urls[0]);
-                if(!urls[1].equals(""))
-                    params.put("key2", urls[1]);
+                params.put("id", urls[0]);
                 params.put("lat", Double.toString(Maps.mCurrentLocation.getLatitude()));
                 params.put("lon", Double.toString(Maps.mCurrentLocation.getLongitude()));
 

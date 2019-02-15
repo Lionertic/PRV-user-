@@ -53,6 +53,9 @@ public class SignIn extends AsyncTask<String, Void, Void> {
                                 FragmentManager fm = ((FragmentActivity)activity).getSupportFragmentManager();
                                 fm.beginTransaction().replace(R.id.fragment, m).commit();
                             }
+                            else if(jsonObject.getInt("success")==2){
+                                Toast.makeText(context, "Wrong mobile used", Toast.LENGTH_LONG).show();
+                            }
                             else{
                                 Toast.makeText(context, "User Doesn't Exist", Toast.LENGTH_LONG).show();
                             }
@@ -75,6 +78,7 @@ public class SignIn extends AsyncTask<String, Void, Void> {
                 Map<String, String> params = new HashMap<>();
                 params.put("mob", strings[0]);
                 params.put("pass", strings[1]);
+                params.put("imei",strings[2]);
                 return params;
             }
         };

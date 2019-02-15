@@ -62,7 +62,7 @@ public class DriverRouting extends Service {
         mHandler.postDelayed(mRunnable = new Runnable() {
             @Override
             public void run() {
-                new Routes(MainActivity.context).execute(Maps.key[0],Maps.key[1]);
+                new Routes(MainActivity.context).execute(Maps.key);
                 mHandler.postDelayed(mRunnable, 5000);
             }
         }, 5000);

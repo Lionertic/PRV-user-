@@ -1,9 +1,14 @@
 package com.example.lionertic.main.Fragments;
 
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +31,8 @@ public class SignUp extends Fragment {
     private static int PASSWORD_LENGTH = 8;
     private Button su,si;
     private View v;
+    private TelephonyManager telephonyManager;
+    private String IMEI_Number_Holder;
 
     public SignUp() {
         // Required empty public constructor
@@ -62,13 +69,25 @@ public class SignUp extends Fragment {
 
             }
         });
+        telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return v;
+        }
+        IMEI_Number_Holder = telephonyManager.getDeviceId();
         return v;
     }
 
     void check(String mob,String pass){
         if(mob.length()==10)
             if(is_Valid_Password(pass))
-                new Register(getContext(),getActivity()).execute(mob,pass);
+                new Register(getContext(),getActivity()).execute(mob,pass,IMEI_Number_Holder);
             else
                 Toast.makeText(getContext(),"Weak Password",Toast.LENGTH_LONG).show();
         else

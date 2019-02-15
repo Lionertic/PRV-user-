@@ -95,7 +95,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
     private static String RO;
     public static Marker a = null;
     public static Polyline dri[] = new Polyline[2];
-    public static String key[]=new String[2];
+    public static String key;
     public static Marker drv[]=new Marker[2];
 
     private FusedLocationProviderClient mFusedLocationClient;
@@ -208,11 +208,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
                             JSONObject jsonObject = new JSONObject(response);
 
                             if(jsonObject.getInt("success")==1) {
-                                JSONArray jsonArray=jsonObject.getJSONArray("key");
-                                for(int i = 0 ; i <jsonArray.length();i++)
-                                    key[i]=jsonArray.getString(i);
-                                if (jsonArray.length()==1)
-                                    key[1]="";
+                                key=jsonObject.getString("id");
                                 startDriverRounting();
                             }
                             else{
