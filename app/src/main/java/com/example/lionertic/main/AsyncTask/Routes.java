@@ -2,6 +2,7 @@ package com.example.lionertic.main.AsyncTask;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ShareCompat;
 import android.util.Log;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
@@ -50,12 +52,11 @@ public class Routes extends AsyncTask<String, Void, String> implements WorkerRes
     static LatLng prev[] = new LatLng[2];
     WorkerResultReceiver mWorkerResultReceiver;
     static double time = 0;
-
+    SharedPreferences sd;
 
     public Routes(Context cnt) {
         context=cnt;
-        prev[0]=null;
-        prev[1]=null;
+        sd=context.getSharedPreferences("route",Context.MODE_PRIVATE);
     }
 
     private void animateCarMove(final Marker marker, final LatLng beginLatLng, final LatLng endLatLng, final long duration ) {
@@ -156,15 +157,16 @@ public class Routes extends AsyncTask<String, Void, String> implements WorkerRes
                     public void onResponse(String response) {
                         try {
                             MainActivity.progressDialog.dismiss();
-
                             JSONObject jsonObject = new JSONObject(response);
                             for(int i=0;i<jsonObject.getInt("no");i++){
                                 LatLng lo = new LatLng(jsonObject.getJSONArray(i + "co").getDouble(0), jsonObject.getJSONArray(i + "co").getDouble(1));
 
-                                if (prev[i] == null) {
+                                if (sd.getInt(Integer.toString(i),0)==0) {
+                                    Log.e("qwertyuiop","hi");
                                     Maps.drv[i] = Maps.mMap.addMarker(new MarkerOptions().position(lo).title("TEST"));
                                     route(jsonObject.getJSONObject(Integer.toString(i)), Color.GREEN, i, prev[i], lo);
                                     prev[i] = new LatLng(lo.latitude, lo.longitude);
+                                    sd.edit().putInt(Integer.toString(i),1).apply();
                                 }
                                 route(jsonObject.getJSONObject(Integer.toString(i)), Color.GREEN, i, prev[i], lo);
                                 prev[i] = new LatLng(lo.latitude, lo.longitude);

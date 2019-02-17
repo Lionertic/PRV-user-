@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -22,7 +23,11 @@ public class DriverRouting extends Service {
 
     Handler mHandler = new Handler();
     Runnable mRunnable;
+    SharedPreferences sd;
     public DriverRouting() {
+        sd=MainActivity.context.getSharedPreferences("route",Context.MODE_PRIVATE);
+        sd.edit().putInt("0",0).apply();
+        sd.edit().putInt("1",0).apply();
     }
 
     @Override
