@@ -199,47 +199,54 @@ public class Maps extends Fragment implements OnMapReadyCallback {
     }
 
     private void nearDrive(){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                CONSTANTS.NEAR,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
+        if(!isDriverRountingRunning()){
 
-                            if(jsonObject.getInt("success")==1) {
-                                key=jsonObject.getString("id");
-                                startDriverRounting();
+            StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                    CONSTANTS.NEAR,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+
+                                if(jsonObject.getInt("success")==1) {
+                                    key=jsonObject.getString("id");
+                                    startDriverRounting();
+                                }
+                                else{
+                                    MainActivity.progressDialog.dismiss();
+                                    Toast.makeText(getContext(),"No Driver Found",Toast.LENGTH_LONG).show();
+                                }
+
                             }
-                            else{
-                                MainActivity.progressDialog.dismiss();
-                                Toast.makeText(getContext(),"No Driver Found",Toast.LENGTH_LONG).show();
+                            catch (JSONException e) {
+                                e.printStackTrace();
                             }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getContext(), error.getMessage()+"asdfghjkl", Toast.LENGTH_LONG).show();
 
                         }
-                        catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getContext(), error.getMessage()+"asdfghjkl", Toast.LENGTH_LONG).show();
+                    }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("lat", Double.toString(onChange.getLatitude()));
+                    params.put("lon", Double.toString(onChange.getLongitude()));
+                    params.put("key",MainActivity.KEY);
+                    return params;
+                }
+            };
+            RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
 
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("lat", Double.toString(onChange.getLatitude()));
-                params.put("lon", Double.toString(onChange.getLongitude()));
-                params.put("key",MainActivity.KEY);
-                return params;
-            }
-        };
-        RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
-
+        }
+        else{
+            MainActivity.progressDialog.dismiss();
+            Toast.makeText(getContext(),"Already matched",Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void startDriverRounting(){
