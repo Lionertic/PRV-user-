@@ -10,14 +10,11 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
-import android.view.WindowManager;
 
 import com.example.lionertic.main.AsyncTask.Routes;
 import com.example.lionertic.main.Fragments.Maps;
 import com.example.lionertic.main.MainActivity;
-import com.google.android.gms.maps.CameraUpdateFactory;
 
 public class DriverRouting extends Service {
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center_vertical|center_horizontal">
+
+
+    <!-- TODO: Update blank fragment layout -->
+    <com.mikhaellopez.circularfillableloaders.CircularFillableLoaders
+        android:id="@+id/circularFillableLoaders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/splashicon"
+        android:layout_margin="80dp"
+        app:cfl_border="true"
+        app:cfl_border_width="5dp"
+        app:cfl_progress="80"
+        app:cfl_wave_amplitude="0.06"
+        app:cfl_wave_color="#3f51b5" />
+
+</LinearLayout>
