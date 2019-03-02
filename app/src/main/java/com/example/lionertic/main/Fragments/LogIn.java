@@ -2,16 +2,21 @@ package com.example.lionertic.main.Fragments;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,6 +24,8 @@ import android.widget.Toast;
 import com.example.lionertic.main.AsyncTask.SignIn;
 import com.example.lionertic.main.MainActivity;
 import com.example.lionertic.main.R;
+
+import java.util.Objects;
 
 
 /**
@@ -34,11 +41,15 @@ public class LogIn extends Fragment {
     private TelephonyManager telephonyManager;
     private String IMEI_Number_Holder;
 
+    private TextInputLayout inputLayoutId, inputLayoutPassword;
+
+
     public LogIn() {
         // Required empty public constructor
     }
 
 
+    @SuppressLint("RestrictedApi")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,6 +58,9 @@ public class LogIn extends Fragment {
         MainActivity.progressDialog.dismiss();
         su = v.findViewById(R.id.register1);
         si = v.findViewById(R.id.login1);
+        inputLayoutId = v.findViewById(R.id.UserLayout);
+        inputLayoutPassword= v.findViewById(R.id.passLayout);
+
         su.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +82,7 @@ public class LogIn extends Fragment {
                 check(mo, pa);
             }
         });
+
         telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
 
@@ -80,6 +95,10 @@ public class LogIn extends Fragment {
             return v;
         }
         IMEI_Number_Holder = telephonyManager.getDeviceId();
+
+        Objects.requireNonNull(getActivity()).dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK));
+        getActivity().dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK));
+
         return v;
 
 

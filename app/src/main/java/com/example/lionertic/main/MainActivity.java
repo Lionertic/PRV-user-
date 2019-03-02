@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -80,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
             startLocation(0);
             if (KEY.equals("")) {
                 startLocation(0);
-                setTitle("Sign In");
                 LogIn m = new LogIn();
                 FragmentManager fm = getSupportFragmentManager();
                 fm.beginTransaction().replace(R.id.fragment, m).commit();
@@ -175,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
     }
 
     private boolean isNetworkConnected() {

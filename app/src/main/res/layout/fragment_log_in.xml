@@ -4,40 +4,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_vertical|center_horizontal">
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/p"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/UserLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Mobile"
-        tools:layout_editor_absoluteX="94dp"
-        tools:layout_editor_absoluteY="223dp"/>
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:hint="@string/user_id">
 
-    <EditText
-        android:id="@+id/phone1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="phone"
-        tools:layout_editor_absoluteX="94dp"
-        tools:layout_editor_absoluteY="162dp" />
+        <EditText
+            android:id="@+id/phone1"
+            android:windowSoftInputMode="stateVisible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="phone" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/passLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pass"
-        tools:layout_editor_absoluteX="94dp"
-        tools:layout_editor_absoluteY="223dp" />
-    <EditText
-        android:id="@+id/pass1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPassword"
-        tools:layout_editor_absoluteX="94dp"
-        tools:layout_editor_absoluteY="276dp" />
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:hint="@string/password"
+        app:errorEnabled="true"
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/pass1"
+            android:layout_width="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword" />
+
+    </android.support.design.widget.TextInputLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -53,7 +65,7 @@
             android:id="@+id/login1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="LOG IN"
+            android:text="@string/log_in"
             tools:layout_editor_absoluteX="129dp"
             tools:layout_editor_absoluteY="361dp" />
     </LinearLayout>
