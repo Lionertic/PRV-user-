@@ -96,9 +96,6 @@ public class LogIn extends Fragment {
         }
         IMEI_Number_Holder = telephonyManager.getDeviceId();
 
-        Objects.requireNonNull(getActivity()).dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK));
-        getActivity().dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK));
-
         return v;
 
 
