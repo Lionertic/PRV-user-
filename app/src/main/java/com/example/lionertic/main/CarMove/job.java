@@ -50,7 +50,7 @@ public class job extends JobIntentService {private static final String TAG = "Wo
         enqueueWork(context, job.class, DOWNLOAD_JOB_ID, intent);
     }
 
-    @SuppressLint("DefaultLocale")
+    @SuppressLint({"DefaultLocale", "RestrictedApi"})
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
         Log.d(TAG, "onHandleWork() called with: intent = [" + intent + "]");

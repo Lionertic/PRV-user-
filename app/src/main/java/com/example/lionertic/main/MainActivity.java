@@ -3,7 +3,6 @@ package com.example.lionertic.main;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,44 +12,22 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Handler;
-import android.os.SystemClock;
+import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.example.lionertic.main.AsyncTask.KeyCheck;
+import com.example.lionertic.main.Fragments.Home_page;
 import com.example.lionertic.main.Fragments.LogIn;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.single.PermissionListener;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -77,13 +54,14 @@ public class MainActivity extends AppCompatActivity {
         KEY = preferences.getString("KEY", "");
 
         if (isNetworkConnected()) {
-            isLocationEnabled();
-            startLocation(0);
+//            isLocationEnabled();
+//            startLocation(0);
             if (KEY.equals("")) {
-                startLocation(0);
+                //            startLocation(0);
                 LogIn m = new LogIn();
+//                Home_page m = new Home_page();
                 FragmentManager fm = getSupportFragmentManager();
-                fm.beginTransaction().replace(R.id.fragment, m).commit();
+                fm.beginTransaction().add(R.id.fragment, m).commit();
             } else {
                 Log.e("asfafsfasaas", "not granted");
                 startLocation(1);
@@ -184,28 +162,28 @@ public class MainActivity extends AppCompatActivity {
         return cm.getActiveNetworkInfo() != null;
     }
 
-    public void isLocationEnabled() {
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Boolean gps_enabled=false,network_enabled=false;
-        try {
-            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch (Exception ex) {
-        }
-        try {
-            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch (Exception ex) {
-        }
-        if (!gps_enabled && !network_enabled) {
-            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-            dialog.setMessage("Enable Location");
-            dialog.setPositiveButton("Enable", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(myIntent);
-                }
-            });
-            dialog.show();
-        }
-    }
+//    public void isLocationEnabled() {
+//        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        boolean gps_enabled = false, network_enabled = false;
+//        try {
+//            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+//        } catch (Exception ex) {
+//        }
+//        try {
+//            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+//        } catch (Exception ex) {
+//        }
+//        if (!gps_enabled && !network_enabled) {
+//            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+//            dialog.setMessage("Enable Location");
+//            dialog.setPositiveButton("Enable", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+//                    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                    startActivity(myIntent);
+//                }
+//            });
+//            dialog.show();
+//        }
+//    }
 }

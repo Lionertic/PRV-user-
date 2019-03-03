@@ -48,7 +48,7 @@ public class SignIn extends AsyncTask<String, Void, Void> {
                             JSONObject jsonObject = new JSONObject(response);
                             if(jsonObject.getInt("success")==1) {
                                 Toast.makeText(context, "Successful!!", Toast.LENGTH_LONG).show();
-                                SharedPreferences sd = context.getSharedPreferences("KEY", context.MODE_PRIVATE);
+                                SharedPreferences sd = context.getSharedPreferences("KEY", Context.MODE_PRIVATE);
                                 sd.edit().putString("KEY", jsonObject.getString("KEY")).commit();
                                 MainActivity.KEY=jsonObject.getString("KEY");
                                 activity.setTitle("Maps");
@@ -77,7 +77,7 @@ public class SignIn extends AsyncTask<String, Void, Void> {
                 })
         {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("mob", strings[0]);
                 params.put("pass", strings[1]);

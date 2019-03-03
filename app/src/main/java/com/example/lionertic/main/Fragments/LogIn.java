@@ -2,7 +2,6 @@ package com.example.lionertic.main.Fragments;
 
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -10,13 +9,11 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -24,8 +21,6 @@ import android.widget.Toast;
 import com.example.lionertic.main.AsyncTask.SignIn;
 import com.example.lionertic.main.MainActivity;
 import com.example.lionertic.main.R;
-
-import java.util.Objects;
 
 
 /**
@@ -49,7 +44,6 @@ public class LogIn extends Fragment {
     }
 
 
-    @SuppressLint("RestrictedApi")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,7 +53,7 @@ public class LogIn extends Fragment {
         su = v.findViewById(R.id.register1);
         si = v.findViewById(R.id.login1);
         inputLayoutId = v.findViewById(R.id.UserLayout);
-        inputLayoutPassword= v.findViewById(R.id.passLayout);
+        inputLayoutPassword = v.findViewById(R.id.passLayout);
 
         su.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,11 +68,13 @@ public class LogIn extends Fragment {
         si.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mob = (EditText) v.findViewById(R.id.phone1);
-                pass = (EditText) v.findViewById(R.id.pass1);
+                mob = v.findViewById(R.id.phone1);
+                pass = v.findViewById(R.id.pass1);
                 String mo, pa;
                 mo = mob.getText().toString().trim();
                 pa = pass.getText().toString().trim();
+
+                Toast.makeText(getContext(), mo, Toast.LENGTH_LONG).show();
                 check(mo, pa);
             }
         });
@@ -101,14 +97,17 @@ public class LogIn extends Fragment {
 
     }
 
-    void check(String mob,String pass){
-        if(mob.length()==10)
-            if(is_Valid_Password(pass))
-                new SignIn(getContext(),getActivity()).execute(mob,pass,IMEI_Number_Holder);
-            else
-                Toast.makeText(getContext(),"Invalid Password",Toast.LENGTH_LONG).show();
+    void check(String mob, String pass) {
+        if (mob.length() == 10)
+            if (is_Valid_Password(pass)) {
+                Toast.makeText(getContext(), "signing", Toast.LENGTH_LONG).show();
+
+                new SignIn(getContext(), getActivity()).execute(mob, pass, IMEI_Number_Holder);
+
+            } else
+                Toast.makeText(getContext(), "Invalid Password", Toast.LENGTH_LONG).show();
         else
-            Toast.makeText(getContext(),"Wrong Number",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Wrong Number", Toast.LENGTH_LONG).show();
     }
 
     public static boolean is_Valid_Password(String password) {
@@ -125,12 +124,25 @@ public class LogIn extends Fragment {
         }
         return (charCount >= 2 && numCount >= 2);
     }
+
     public static boolean is_Letter(char ch) {
         ch = Character.toUpperCase(ch);
         return (ch >= 'A' && ch <= 'Z');
     }
+
     public static boolean is_Numeric(char ch) {
         return (ch >= '0' && ch <= '9');
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+    }
 }

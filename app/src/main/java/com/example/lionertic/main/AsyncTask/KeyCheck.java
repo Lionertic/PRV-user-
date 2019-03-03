@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.lionertic.main.CONSTANTS;
+import com.example.lionertic.main.Fragments.Home_page;
 import com.example.lionertic.main.Fragments.LogIn;
 import com.example.lionertic.main.Fragments.Maps;
 import com.example.lionertic.main.MainActivity;
@@ -55,10 +56,9 @@ public class KeyCheck extends AsyncTask<URL, Void, String> {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-
                             if(jsonObject.getInt("success")==1) {
                                 activity.setTitle("Maps");
-                                Maps m = new Maps();
+                                Home_page m = new Home_page();
                                 FragmentManager fm = ((FragmentActivity)activity).getSupportFragmentManager();
                                 fm.beginTransaction().replace(R.id.fragment, m).commit();
                             }

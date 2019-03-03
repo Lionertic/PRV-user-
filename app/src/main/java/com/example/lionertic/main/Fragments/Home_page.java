@@ -1,7 +1,13 @@
 package com.example.lionertic.main.Fragments;
 
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 
+import com.example.lionertic.main.MainActivity;
 import com.example.lionertic.main.R;
 import com.example.lionertic.main.gridview.GridItemView;
 import com.example.lionertic.main.gridview.GridViewAdapter;
@@ -43,12 +50,16 @@ public class Home_page extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        MainActivity.progressDialog.dismiss();
+
         return inflater.inflate(R.layout.fragment_home_page, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        isLocationEnabled();
 
         gridView = view.findViewById(R.id.gridview);
         selectedStrings = new ArrayList<>();
@@ -82,5 +93,30 @@ public class Home_page extends Fragment {
 
             }
         });
+    }
+
+    public void isLocationEnabled() {
+        LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false, network_enabled = false;
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+        }
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ex) {
+        }
+        if (!gps_enabled && !network_enabled) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+            dialog.setMessage("Enable Location");
+            dialog.setPositiveButton("Enable", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(myIntent);
+                }
+            });
+            dialog.show();
+        }
     }
 }
