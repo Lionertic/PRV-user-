@@ -2,14 +2,11 @@ package com.example.lionertic.main;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +18,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.lionertic.main.AsyncTask.KeyCheck;
-import com.example.lionertic.main.Fragments.Home_page;
 import com.example.lionertic.main.Fragments.LogIn;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -144,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
         // allowed permissions
 
     }
+
 
     private boolean checkPermissions() {
         int permissionState = ActivityCompat.checkSelfPermission(this,

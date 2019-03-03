@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-
 import com.example.lionertic.main.MainActivity;
 import com.example.lionertic.main.R;
 import com.example.lionertic.main.gridview.GridItemView;
