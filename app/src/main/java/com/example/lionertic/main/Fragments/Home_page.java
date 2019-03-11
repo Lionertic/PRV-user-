@@ -34,11 +34,8 @@ import com.example.lionertic.main.gridview.GridViewAdapter;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +57,7 @@ public class Home_page extends Fragment {
     private View serviceReq;
     private ArrayList<String> selectedStrings;
     private static final String[] numbers = new String[]{
-            "A", "B", "C", "D", "E", "F"};
+            "Medical Assistance", "Appetite Request", "Sanitary Request", "Destress Request", "Reinforcement Request", "Technical Assistance"};
 //    public static ProgressDialog progressDialog;
 
     public Home_page() {
