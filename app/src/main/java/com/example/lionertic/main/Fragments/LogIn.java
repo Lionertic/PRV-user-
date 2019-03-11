@@ -3,7 +3,9 @@ package com.example.lionertic.main.Fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
@@ -21,6 +23,10 @@ import android.widget.Toast;
 import com.example.lionertic.main.AsyncTask.SignIn;
 import com.example.lionertic.main.MainActivity;
 import com.example.lionertic.main.R;
+
+import java.util.Objects;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 /**
@@ -55,45 +61,48 @@ public class LogIn extends Fragment {
         inputLayoutId = v.findViewById(R.id.UserLayout);
         inputLayoutPassword = v.findViewById(R.id.passLayout);
 
-        su.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().setTitle("Sign Up");
-                SignUp m = new SignUp();
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                fm.beginTransaction().replace(R.id.fragment, m).commit();
+        if (isNetworkConnected()) {
+            su.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SignUp m = new SignUp();
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    fm.beginTransaction().replace(R.id.fragment, m).commit();
 
+                }
+            });
+
+            si.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mob = v.findViewById(R.id.phone1);
+                    pass = v.findViewById(R.id.pass1);
+                    String mo, pa;
+                    mo = mob.getText().toString().trim();
+                    pa = pass.getText().toString().trim();
+
+                    Toast.makeText(getContext(), mo, Toast.LENGTH_LONG).show();
+                    check(mo, pa);
+                }
+            });
+
+            telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return v;
             }
-        });
-        si.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mob = v.findViewById(R.id.phone1);
-                pass = v.findViewById(R.id.pass1);
-                String mo, pa;
-                mo = mob.getText().toString().trim();
-                pa = pass.getText().toString().trim();
+            IMEI_Number_Holder = telephonyManager.getDeviceId();
+        } else
+            Toast.makeText(getContext(), "NO network..Enable and RESTART APP", Toast.LENGTH_LONG).show();
 
-                Toast.makeText(getContext(), mo, Toast.LENGTH_LONG).show();
-                check(mo, pa);
-            }
-        });
-
-        telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return v;
-        }
-        IMEI_Number_Holder = telephonyManager.getDeviceId();
 
         return v;
-
 
     }
 
@@ -101,13 +110,15 @@ public class LogIn extends Fragment {
         if (mob.length() == 10)
             if (is_Valid_Password(pass)) {
                 Toast.makeText(getContext(), "signing", Toast.LENGTH_LONG).show();
-
                 new SignIn(getContext(), getActivity()).execute(mob, pass, IMEI_Number_Holder);
-
-            } else
+            } else {
+                inputLayoutPassword.setError("Invalid Password");
                 Toast.makeText(getContext(), "Invalid Password", Toast.LENGTH_LONG).show();
-        else
+            }
+        else {
+            inputLayoutId.setError("Invalid Mobile Num");
             Toast.makeText(getContext(), "Wrong Number", Toast.LENGTH_LONG).show();
+        }
     }
 
     public static boolean is_Valid_Password(String password) {
@@ -144,5 +155,10 @@ public class LogIn extends Fragment {
     public void onStop() {
         super.onStop();
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) Objects.requireNonNull(getActivity()).getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 }
