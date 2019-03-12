@@ -2,6 +2,7 @@ package com.example.lionertic.main.AsyncTask;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -16,6 +17,9 @@ import com.example.lionertic.main.MainActivity;
 import com.example.lionertic.main.RequestHandler;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class SaveLoca extends AsyncTask<Location, Void, String> {
 
@@ -34,21 +38,23 @@ public class SaveLoca extends AsyncTask<Location, Void, String> {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.e("123context", response+"iiiii");
+                        Log.e("Loc update Response", response);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("123context", error.getMessage()+"rrrrrr");
+                        Log.e("Loc update error", error.getMessage());
                     }
                 }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
+                SharedPreferences preferences = context.getSharedPreferences("KEY", MODE_PRIVATE);
+                String KEY = preferences.getString("KEY", "");
                 params.put("Lat", Double.toString(urls[0].getLatitude()));
                 params.put("Lon", Double.toString(urls[0].getLongitude()));
-                params.put("key", MainActivity.KEY);
+                params.put("key", KEY);
                 return params;
             }
         };

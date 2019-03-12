@@ -24,6 +24,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class Register extends AsyncTask<String, Void, Void> {
 
     Context context;
@@ -46,7 +48,7 @@ public class Register extends AsyncTask<String, Void, Void> {
                             JSONObject jsonObject = new JSONObject(response);
                             Toast.makeText(context, jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                             if(jsonObject.getInt("success")==1) {
-                                SharedPreferences sd = context.getSharedPreferences("KEY", context.MODE_PRIVATE);
+                                SharedPreferences sd = context.getSharedPreferences("KEY", MODE_PRIVATE);
                                 sd.edit().putString("KEY", jsonObject.getString("KEY")).commit();
                             }
                         }

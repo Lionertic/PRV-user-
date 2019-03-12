@@ -72,7 +72,7 @@ public class SignIn extends AsyncTask<String, Void, Void> {
                         }
                         catch (Exception e) {
                             e.printStackTrace();
-                            Log.e("qwertyuio","asdfghjkl"+e.toString());
+                            Log.e("Signin",e.toString());
                         }
                     }
                 },

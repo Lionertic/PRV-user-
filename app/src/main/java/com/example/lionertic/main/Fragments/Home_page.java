@@ -156,12 +156,20 @@ public class Home_page extends Fragment {
             serviceReq.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                t.setText( selectedStrings.toString());
-                    //check permissions are given
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(selectedStrings.toString());
+                    String s=sb.substring(1,sb.length()-1);
+                    Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
+                  //  check permissions are given
                     if (checkPermissions()) {
+                        if(s.length()!=0){
+
                         Maps m = new Maps();
                         FragmentManager fm = ((FragmentActivity) activity).getSupportFragmentManager();
                         fm.beginTransaction().replace(R.id.fragment, m).commit();
+                        }
+                        else
+                            Snackbar.make(serviceReq, "Please Select atleast one service", Snackbar.LENGTH_SHORT).show();
                     } else
                         Snackbar.make(serviceReq, "permision denied", Snackbar.LENGTH_SHORT)
                                 .setAction("Settings", new View.OnClickListener() {

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -60,7 +61,7 @@ public class KeyCheck extends AsyncTask<String, Void, Void> {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if(jsonObject.getInt("success")==1) {
-                                activity.setTitle("Map");
+                                activity.setTitle("Home");
                                 Home_page m = new Home_page();
                                 FragmentManager fm = ((FragmentActivity)activity).getSupportFragmentManager();
                                 fm.beginTransaction().replace(R.id.fragment, m).commit();
@@ -80,8 +81,8 @@ public class KeyCheck extends AsyncTask<String, Void, Void> {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(context, error.getMessage()+"asdfghjkl", Toast.LENGTH_LONG).show();
-
+                            Log.e("Check",error.getMessage());
+                            Toast.makeText(context, " Server connection Timed out", Toast.LENGTH_LONG).show();
                         }
         }) {
                         @Override
