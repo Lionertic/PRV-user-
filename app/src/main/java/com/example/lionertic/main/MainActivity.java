@@ -29,7 +29,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "E";
-    public static String KEY = "";
+    public static String KEY, IID = "";
     private static final int REQUEST_CHECK_SETTINGS = 100;
     private static Boolean mRequestingLocationUpdates = false;
     public static Activity activity;
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences preferences = getSharedPreferences("KEY", MODE_PRIVATE);
         KEY = preferences.getString("KEY", "");
-
+        IID = preferences.getString("ID","");
 //        if (isNetworkConnected()) {
 //            isLocationEnabled();
 //            startLocation(0);

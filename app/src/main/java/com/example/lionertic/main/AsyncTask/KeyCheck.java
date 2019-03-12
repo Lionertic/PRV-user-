@@ -3,6 +3,7 @@ package com.example.lionertic.main.AsyncTask;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -28,7 +29,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class KeyCheck extends AsyncTask<URL, Void, String> {
+import static android.content.Context.MODE_PRIVATE;
+
+public class KeyCheck extends AsyncTask<String, Void, Void> {
 
     Context context;
     Activity activity;
@@ -46,7 +49,7 @@ public class KeyCheck extends AsyncTask<URL, Void, String> {
     }
 
     @Override
-    protected String doInBackground(final URL... urls) {
+    protected Void doInBackground(final String... strings) {
         // Create URL object
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
@@ -57,7 +60,7 @@ public class KeyCheck extends AsyncTask<URL, Void, String> {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if(jsonObject.getInt("success")==1) {
-                                activity.setTitle("Maps");
+                                activity.setTitle("Map");
                                 Home_page m = new Home_page();
                                 FragmentManager fm = ((FragmentActivity)activity).getSupportFragmentManager();
                                 fm.beginTransaction().replace(R.id.fragment, m).commit();
@@ -84,7 +87,8 @@ public class KeyCheck extends AsyncTask<URL, Void, String> {
                         @Override
                         protected Map<String, String> getParams() throws AuthFailureError {
                             Map<String, String> params = new HashMap<>();
-                            params.put("key", MainActivity.KEY);
+                            params.put("key", strings[0]);
+                            params.put("id",strings[1]);
                             return params;
                         }
                     };
@@ -95,6 +99,6 @@ public class KeyCheck extends AsyncTask<URL, Void, String> {
     }
 
     @Override
-    protected void onPostExecute(String earthquake) {
+    protected void onPostExecute(Void aVoid) {
     }
 }

@@ -86,22 +86,8 @@ public class LogIn extends Fragment {
                 }
             });
 
-            telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return v;
-            }
-            IMEI_Number_Holder = telephonyManager.getDeviceId();
         } else
             Toast.makeText(getContext(), "NO network..Enable and RESTART APP", Toast.LENGTH_LONG).show();
-
-
         return v;
 
     }
@@ -110,13 +96,15 @@ public class LogIn extends Fragment {
         if (mob.length() == 10)
             if (is_Valid_Password(pass)) {
                 Toast.makeText(getContext(), "signing", Toast.LENGTH_LONG).show();
-                new SignIn(getContext(), getActivity()).execute(mob, pass, IMEI_Number_Holder);
+                new SignIn(getContext(), getActivity()).execute(mob, pass);
             } else {
                 inputLayoutPassword.setError("Invalid Password");
                 Toast.makeText(getContext(), "Invalid Password", Toast.LENGTH_LONG).show();
             }
         else {
             inputLayoutId.setError("Invalid Mobile Num");
+            if(!is_Valid_Password(pass))
+                inputLayoutPassword.setError("Invalid Password");
             Toast.makeText(getContext(), "Wrong Number", Toast.LENGTH_LONG).show();
         }
     }

@@ -8,12 +8,14 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.lionertic.main.AsyncTask.KeyCheck;
 import com.example.lionertic.main.R;
 
 import java.util.Objects;
@@ -60,12 +62,16 @@ public class SplashScreen extends Fragment {
                 if (isNetworkConnected()) {
                     SharedPreferences preferences = Objects.requireNonNull(getActivity()).getSharedPreferences("KEY", MODE_PRIVATE);
                     String KEY = preferences.getString("KEY", "");
-                    if (getFragmentManager() != null) {
-                        getFragmentManager().beginTransaction().replace(R.id.fragment, new LogIn()).commit();
+                    String ID = preferences.getString("ID", "");
+                    if (!TextUtils.isEmpty(KEY)) {
+                        new KeyCheck(getContext(),getActivity()).execute(KEY,ID);
+                    } else {
+                        if (getFragmentManager() != null) {
+                            getFragmentManager().beginTransaction().replace(R.id.fragment, new LogIn()).commit();
+                        }
                     }
                 } else
                     Toast.makeText(getContext(), "NO network..Enable and RESTART APP", Toast.LENGTH_LONG).show();
-
             }
         }, 1500);
     }
