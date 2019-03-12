@@ -50,7 +50,7 @@ public class SaveLoca extends AsyncTask<Location, Void, String> {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                SharedPreferences preferences = context.getSharedPreferences("KEY", MODE_PRIVATE);
+                SharedPreferences preferences = context.getSharedPreferences("KEY", context.MODE_PRIVATE);
                 String KEY = preferences.getString("KEY", "");
                 params.put("Lat", Double.toString(urls[0].getLatitude()));
                 params.put("Lon", Double.toString(urls[0].getLongitude()));

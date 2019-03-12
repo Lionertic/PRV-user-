@@ -81,7 +81,6 @@ public class KeyCheck extends AsyncTask<String, Void, Void> {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.e("Check",error.getMessage());
                             Toast.makeText(context, " Server connection Timed out", Toast.LENGTH_LONG).show();
                         }
         }) {
