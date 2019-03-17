@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.example.lionertic.main.MainActivity.KEY;
 
 public class SaveLoca extends AsyncTask<Location, Void, String> {
 
@@ -44,14 +45,12 @@ public class SaveLoca extends AsyncTask<Location, Void, String> {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("Loc update error", error.getMessage());
+                        Log.e("Loc update error", error.getMessage()+"error");
                     }
                 }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                SharedPreferences preferences = context.getSharedPreferences("KEY", context.MODE_PRIVATE);
-                String KEY = preferences.getString("KEY", "");
                 params.put("Lat", Double.toString(urls[0].getLatitude()));
                 params.put("Lon", Double.toString(urls[0].getLongitude()));
                 params.put("key", KEY);

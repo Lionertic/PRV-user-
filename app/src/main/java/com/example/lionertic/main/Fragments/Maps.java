@@ -168,7 +168,6 @@ public class Maps extends Fragment implements OnMapReadyCallback {
 
                 startLocation();
                 startLocationService();
-
             }
         });
         button=v.findViewById(R.id.logout);
@@ -210,6 +209,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
             }
         }
     }
+
     private boolean isLocationServiceRunning() {
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(getActivity().ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
@@ -222,7 +222,6 @@ public class Maps extends Fragment implements OnMapReadyCallback {
 
     private void nearDrive(){
         if(!isDriverRountingRunning()){
-
             StringRequest stringRequest = new StringRequest(Request.Method.POST,
                     CONSTANTS.NEAR,
                     new Response.Listener<String>() {

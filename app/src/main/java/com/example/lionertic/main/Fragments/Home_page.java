@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -59,6 +60,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.example.lionertic.main.MainActivity.TAG;
 import static com.example.lionertic.main.MainActivity.activity;
 import static com.example.lionertic.main.MainActivity.progressDialog;
@@ -87,12 +89,15 @@ public class Home_page extends Fragment {
         // Inflate the layout for this fragment
         progressDialog.dismiss();
 
+
         return inflater.inflate(R.layout.fragment_home_page, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
 
         //         back transition
         view.setFocusableInTouchMode(true);
@@ -126,7 +131,6 @@ public class Home_page extends Fragment {
 
         //check network connectivitu
         if (isNetworkConnected()) {
-
             gridView = view.findViewById(R.id.gridview);
             selectedStrings = new ArrayList<>();
             serviceReq = view.findViewById(R.id.req);
@@ -137,9 +141,10 @@ public class Home_page extends Fragment {
             //Check permissions are given
             if (!checkPermissions()) {
                 startLocation(0);
+            }else{
+                isLocationEnabled();
             }
 
-            isLocationEnabled();
             gridView.setAdapter(adapter);
             gridView.setLayoutAnimation(controller);
 
@@ -246,7 +251,7 @@ public class Home_page extends Fragment {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         if (report.areAllPermissionsGranted()) {
-
+                            isLocationEnabled();
                         }
                         if (report.isAnyPermissionPermanentlyDenied()) {
                             // permission is denied permenantly, navigate user to app settings

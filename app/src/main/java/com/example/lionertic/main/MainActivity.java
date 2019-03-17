@@ -81,7 +81,10 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-
+    public void getdet(){
+     SharedPreferences sd = getSharedPreferences("KEY", MODE_PRIVATE);
+     String keys=sd.getString("KEY","");
+    }
 //    public void startLocation(final int i) {
 //        // Requesting ACCESS_FINE_LOCATION using Dexter library
 //
