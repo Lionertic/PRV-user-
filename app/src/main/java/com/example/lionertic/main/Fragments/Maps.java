@@ -5,6 +5,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -34,6 +35,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.arsy.maps_library.MapRipple;
 import com.example.lionertic.main.AsyncTask.SaveLoca;
 import com.example.lionertic.main.BuildConfig;
 import com.example.lionertic.main.CONSTANTS;
@@ -130,6 +132,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
         // Inflate the layout for this fragment
         MainActivity.progressDialog.dismiss();
 
+
         v = inflater.inflate(R.layout.fragment_maps, container, false);
 
 
@@ -221,7 +224,15 @@ public class Maps extends Fragment implements OnMapReadyCallback {
     }
 
     private void nearDrive(){
+        final MapRipple mapRipple = new MapRipple(mMap,new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude()),MainActivity.context);
+        mapRipple.withNumberOfRipples(1);
+        mapRipple.withDistance(500);
+        mapRipple.withRippleDuration(1000);
+        mapRipple.withTransparency(0.5f);
+
         if(!isDriverRountingRunning()){
+
+            mapRipple.startRippleMapAnimation();
             StringRequest stringRequest = new StringRequest(Request.Method.POST,
                     CONSTANTS.NEAR,
                     new Response.Listener<String>() {
@@ -235,7 +246,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
                                     startDriverRounting();
                                 }
                                 else{
-                                    MainActivity.progressDialog.dismiss();
+                                    mapRipple.stopRippleMapAnimation();
                                     Toast.makeText(getContext(),"No Driver Found",Toast.LENGTH_LONG).show();
                                 }
 
@@ -255,9 +266,11 @@ public class Maps extends Fragment implements OnMapReadyCallback {
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
+                    SharedPreferences sd = MainActivity.context.getSharedPreferences("Req", Context.MODE_PRIVATE);
                     params.put("lat", Double.toString(onChange.getLatitude()));
                     params.put("lon", Double.toString(onChange.getLongitude()));
                     params.put("key",MainActivity.KEY);
+                    params.put("req",sd.getString("Req",""));
                     return params;
                 }
             };
@@ -265,8 +278,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
 
         }
         else{
-            MainActivity.progressDialog.dismiss();
-            Toast.makeText(getContext(),"Already matched",Toast.LENGTH_SHORT).show();
+            mapRipple.stopRippleMapAnimation();
         }
     }
 
@@ -304,10 +316,8 @@ public class Maps extends Fragment implements OnMapReadyCallback {
                 mCurrentLocation = locationResult.getLastLocation();
                 mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
                 if ((onChange == null) || (onChange.getLatitude() != mCurrentLocation.getLatitude() && onChange.getLongitude() != mCurrentLocation.getLongitude())) {
-                    Log.e("zxcvbnm", "  " + i++);
                     onChange = mCurrentLocation;
-                    new SaveLoca(getContext()).execute(onChange);
-                    updateLocationUI(mCurrentLocation,1);
+                    updateLocationUI(mCurrentLocation,i++);
                 }
             }
         };
@@ -328,8 +338,10 @@ public class Maps extends Fragment implements OnMapReadyCallback {
         if (mCurrent != null) {
             LatLng l =new LatLng(mCurrent.getLatitude(),mCurrent.getLongitude());
             marker.setPosition(l);
-            if(check==0)
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(l,16));
+            if(check==0) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(l, 16));
+                nearDrive();
+            }
         }
     }
 
@@ -344,7 +356,9 @@ public class Maps extends Fragment implements OnMapReadyCallback {
         marker=mMap.addMarker(new MarkerOptions().position(new LatLng(13.065057, 80.2263933)).title("TEST"));
 
         mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(13.065057, 80.2263933)));
-            startLocationUpdates();
+        startLocationUpdates();
+
+
     }
 
     private void startLocationUpdates() {
@@ -356,7 +370,6 @@ public class Maps extends Fragment implements OnMapReadyCallback {
                     public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                         Log.i(TAG, "All location settings are satisfied.");
 
-                        Toast.makeText(getContext(), "Started location updates!", Toast.LENGTH_SHORT).show();
 
                         //noinspection MissingPermission
                         mFusedLocationClient.requestLocationUpdates(mLocationRequest,

@@ -63,6 +63,7 @@ import java.util.Objects;
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.lionertic.main.MainActivity.TAG;
 import static com.example.lionertic.main.MainActivity.activity;
+import static com.example.lionertic.main.MainActivity.context;
 import static com.example.lionertic.main.MainActivity.progressDialog;
 
 
@@ -170,7 +171,10 @@ public class Home_page extends Fragment {
                     StringBuilder sb = new StringBuilder();
                     sb.append(selectedStrings.toString());
                     String s=sb.substring(1,sb.length()-1);
+
                     Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
+                    SharedPreferences sd = context.getSharedPreferences("Req",MODE_PRIVATE);
+                    sd.edit().putString("Req",s).apply();
                   //  check permissions are given
                     if (checkPermissions()) {
                         if(s.length()!=0){
