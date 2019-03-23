@@ -156,7 +156,8 @@ public class Routes extends AsyncTask<String, Void, String> implements WorkerRes
                     @Override
                     public void onResponse(String response) {
                         try {
-                            MainActivity.progressDialog.dismiss();
+                            if(Maps.mapRipple.isAnimationRunning())
+                                Maps.mapRipple.stopRippleMapAnimation();
                             JSONObject jsonObject = new JSONObject(response);
                             for(int i=0;i<jsonObject.getInt("no");i++){
                                 LatLng lo = new LatLng(jsonObject.getJSONArray(i + "co").getDouble(0), jsonObject.getJSONArray(i + "co").getDouble(1));

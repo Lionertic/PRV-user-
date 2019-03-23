@@ -91,7 +91,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
     View v;
 
     SupportMapFragment supportMapFragment;
-
+    public static MapRipple mapRipple;
     public static GoogleMap mMap;
     public static final String TAG = "E";
     // Creating JSON Parser object
@@ -224,7 +224,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
     }
 
     private void nearDrive(){
-        final MapRipple mapRipple = new MapRipple(mMap,new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude()),MainActivity.context);
+        mapRipple = new MapRipple(mMap,new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude()),MainActivity.context);
         mapRipple.withNumberOfRipples(1);
         mapRipple.withDistance(500);
         mapRipple.withRippleDuration(1000);
