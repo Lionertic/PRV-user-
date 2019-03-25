@@ -159,7 +159,7 @@ public class Routes extends AsyncTask<String, Void, String> implements WorkerRes
                             if(Maps.mapRipple.isAnimationRunning())
                                 Maps.mapRipple.stopRippleMapAnimation();
                             JSONObject jsonObject = new JSONObject(response);
-                            for(int i=0;i<jsonObject.getInt("no");i++){
+                            for(int i=0;i<1;i++){
                                 LatLng lo = new LatLng(jsonObject.getJSONArray(i + "co").getDouble(0), jsonObject.getJSONArray(i + "co").getDouble(1));
 
                                 if (sd.getInt(Integer.toString(i),0)==0) {
