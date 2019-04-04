@@ -2,7 +2,7 @@ package com.example.lionertic.main;
 
 public class CONSTANTS {
 
-    private static final String ROOT_URL = "https://maps.serveo.net/Server/";
+    private static final String ROOT_URL = "http://158499fc.ngrok.io/Server/";
 
     public static final String INSERT = ROOT_URL+"User/update.php";
 

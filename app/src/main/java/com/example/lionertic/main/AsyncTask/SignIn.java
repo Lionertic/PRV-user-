@@ -1,5 +1,6 @@
 package com.example.lionertic.main.AsyncTask;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -15,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.lionertic.main.CONSTANTS;
+import com.example.lionertic.main.Fragments.Home_page;
 import com.example.lionertic.main.Fragments.Maps;
 import com.example.lionertic.main.MainActivity;
 import com.example.lionertic.main.R;
@@ -28,7 +30,7 @@ import java.util.Map;
 public class SignIn extends AsyncTask<String, Void, Void> {
 
     Context context;
-    Activity activity;
+     Activity activity;
 
     public SignIn(Context cnt,Activity act){
         context=cnt;
@@ -46,12 +48,18 @@ public class SignIn extends AsyncTask<String, Void, Void> {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if(jsonObject.getInt("success")==1) {
+
                                 Toast.makeText(context, "Successful!!", Toast.LENGTH_LONG).show();
-                                SharedPreferences sd = context.getSharedPreferences("KEY", context.MODE_PRIVATE);
-                                sd.edit().putString("KEY", jsonObject.getString("KEY")).commit();
+//
+                                SharedPreferences sd = context.getSharedPreferences("KEY", Context.MODE_PRIVATE);
+                                sd.edit().putString("KEY", jsonObject.getString("KEY")).putString("ID",jsonObject.getString("ID")).commit();
+//
+//                                Toast.makeText(context, jsonObject.getString("KEY"), Toast.LENGTH_LONG).show();
                                 MainActivity.KEY=jsonObject.getString("KEY");
-                                activity.setTitle("Maps");
-                                Maps m = new Maps();
+//                                Toast.makeText(context, "signed", Toast.LENGTH_LONG).show();
+
+                                activity.setTitle("Home");
+                                Home_page m = new Home_page();
                                 FragmentManager fm = ((FragmentActivity)activity).getSupportFragmentManager();
                                 fm.beginTransaction().replace(R.id.fragment, m).commit();
                             }
@@ -64,7 +72,7 @@ public class SignIn extends AsyncTask<String, Void, Void> {
                         }
                         catch (Exception e) {
                             e.printStackTrace();
-                            Log.e("qwertyuiop","asdfghjkl"+e.toString());
+                            Log.e("Signin",e.toString());
                         }
                     }
                 },
@@ -76,11 +84,10 @@ public class SignIn extends AsyncTask<String, Void, Void> {
                 })
         {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
+            protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("mob", strings[0]);
                 params.put("pass", strings[1]);
-                params.put("imei",strings[2]);
                 return params;
             }
         };

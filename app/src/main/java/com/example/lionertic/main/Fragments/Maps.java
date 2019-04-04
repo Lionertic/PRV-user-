@@ -4,6 +4,9 @@ package com.example.lionertic.main.Fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -16,9 +19,11 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +35,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.arsy.maps_library.MapRipple;
 import com.example.lionertic.main.AsyncTask.SaveLoca;
 import com.example.lionertic.main.BuildConfig;
 import com.example.lionertic.main.CONSTANTS;
@@ -66,8 +72,6 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.single.PermissionListener;
 
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -75,6 +79,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -86,7 +91,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
     View v;
 
     SupportMapFragment supportMapFragment;
-
+    public static MapRipple mapRipple;
     public static GoogleMap mMap;
     public static final String TAG = "E";
     // Creating JSON Parser object
@@ -127,7 +132,27 @@ public class Maps extends Fragment implements OnMapReadyCallback {
         // Inflate the layout for this fragment
         MainActivity.progressDialog.dismiss();
 
+
         v = inflater.inflate(R.layout.fragment_maps, container, false);
+
+
+
+        v.setFocusableInTouchMode(true);
+        v.requestFocus();
+        v.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        Objects.requireNonNull(getActivity()).setTitle("Home");
+                        Home_page m = new Home_page();
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        fm.beginTransaction().replace(R.id.fragment, m).commit();
+                    }
+                }
+                return true;
+            }
+        });
 
         supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map1);
 
@@ -146,7 +171,6 @@ public class Maps extends Fragment implements OnMapReadyCallback {
 
                 startLocation();
                 startLocationService();
-
             }
         });
         button=v.findViewById(R.id.logout);
@@ -188,6 +212,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
             }
         }
     }
+
     private boolean isLocationServiceRunning() {
         ActivityManager manager = (ActivityManager) getActivity().getSystemService(getActivity().ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
@@ -199,8 +224,15 @@ public class Maps extends Fragment implements OnMapReadyCallback {
     }
 
     private void nearDrive(){
+        mapRipple = new MapRipple(mMap,new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude()),MainActivity.context);
+        mapRipple.withNumberOfRipples(1);
+        mapRipple.withDistance(500);
+        mapRipple.withRippleDuration(1000);
+        mapRipple.withTransparency(0.5f);
+
         if(!isDriverRountingRunning()){
 
+            mapRipple.startRippleMapAnimation();
             StringRequest stringRequest = new StringRequest(Request.Method.POST,
                     CONSTANTS.NEAR,
                     new Response.Listener<String>() {
@@ -214,7 +246,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
                                     startDriverRounting();
                                 }
                                 else{
-                                    MainActivity.progressDialog.dismiss();
+                                    mapRipple.stopRippleMapAnimation();
                                     Toast.makeText(getContext(),"No Driver Found",Toast.LENGTH_LONG).show();
                                 }
 
@@ -234,9 +266,11 @@ public class Maps extends Fragment implements OnMapReadyCallback {
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
+                    SharedPreferences sd = MainActivity.context.getSharedPreferences("Req", Context.MODE_PRIVATE);
                     params.put("lat", Double.toString(onChange.getLatitude()));
                     params.put("lon", Double.toString(onChange.getLongitude()));
                     params.put("key",MainActivity.KEY);
+                    params.put("req",sd.getString("Req",""));
                     return params;
                 }
             };
@@ -244,8 +278,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
 
         }
         else{
-            MainActivity.progressDialog.dismiss();
-            Toast.makeText(getContext(),"Already matched",Toast.LENGTH_SHORT).show();
+            mapRipple.stopRippleMapAnimation();
         }
     }
 
@@ -283,10 +316,8 @@ public class Maps extends Fragment implements OnMapReadyCallback {
                 mCurrentLocation = locationResult.getLastLocation();
                 mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
                 if ((onChange == null) || (onChange.getLatitude() != mCurrentLocation.getLatitude() && onChange.getLongitude() != mCurrentLocation.getLongitude())) {
-                    Log.e("zxcvbnm", "  " + i++);
                     onChange = mCurrentLocation;
-                    new SaveLoca(getContext()).execute(onChange);
-                    updateLocationUI(mCurrentLocation,1);
+                    updateLocationUI(mCurrentLocation,i++);
                 }
             }
         };
@@ -307,8 +338,10 @@ public class Maps extends Fragment implements OnMapReadyCallback {
         if (mCurrent != null) {
             LatLng l =new LatLng(mCurrent.getLatitude(),mCurrent.getLongitude());
             marker.setPosition(l);
-            if(check==0)
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(l,16));
+            if(check==0) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(l, 16));
+                nearDrive();
+            }
         }
     }
 
@@ -323,7 +356,9 @@ public class Maps extends Fragment implements OnMapReadyCallback {
         marker=mMap.addMarker(new MarkerOptions().position(new LatLng(13.065057, 80.2263933)).title("TEST"));
 
         mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(13.065057, 80.2263933)));
-            startLocationUpdates();
+        startLocationUpdates();
+
+
     }
 
     private void startLocationUpdates() {
@@ -335,7 +370,6 @@ public class Maps extends Fragment implements OnMapReadyCallback {
                     public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                         Log.i(TAG, "All location settings are satisfied.");
 
-                        Toast.makeText(getContext(), "Started location updates!", Toast.LENGTH_SHORT).show();
 
                         //noinspection MissingPermission
                         mFusedLocationClient.requestLocationUpdates(mLocationRequest,
