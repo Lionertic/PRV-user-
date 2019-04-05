@@ -79,7 +79,6 @@ public class SplashScreen extends Fragment {
     public void onStop() {
         super.onStop();
         handler.removeCallbacks(runnable);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 
 

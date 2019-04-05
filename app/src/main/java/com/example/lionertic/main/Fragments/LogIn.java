@@ -81,7 +81,7 @@ public class LogIn extends Fragment {
                     mo = mob.getText().toString().trim();
                     pa = pass.getText().toString().trim();
 
-                    Toast.makeText(getContext(), mo, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getContext(), mo, Toast.LENGTH_LONG).show();
                     check(mo, pa);
                 }
             });
@@ -95,7 +95,7 @@ public class LogIn extends Fragment {
     void check(String mob, String pass) {
         if (mob.length() == 10)
             if (is_Valid_Password(pass)) {
-                Toast.makeText(getContext(), "signing", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(), "signing", Toast.LENGTH_LONG).show();
                 new SignIn(getContext(), getActivity()).execute(mob, pass);
             } else {
                 inputLayoutPassword.setError("Invalid Password");
