@@ -172,7 +172,7 @@ public class Home_page extends Fragment {
                     sb.append(selectedStrings.toString());
                     String s=sb.substring(1,sb.length()-1);
 
-                    Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(),s,Toast.LENGTH_SHORT).show();
                     SharedPreferences sd = context.getSharedPreferences("Req",MODE_PRIVATE);
                     sd.edit().putString("Req",s).apply();
                   //  check permissions are given

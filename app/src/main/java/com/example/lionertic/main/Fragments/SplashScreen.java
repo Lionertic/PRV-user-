@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.lionertic.main.AsyncTask.KeyCheck;
 import com.example.lionertic.main.R;
+import com.mikhaellopez.circularfillableloaders.CircularFillableLoaders;
 
 import java.util.Objects;
 
@@ -39,7 +40,7 @@ public class SplashScreen extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         handler = new Handler();
@@ -57,8 +58,12 @@ public class SplashScreen extends Fragment {
                             getFragmentManager().beginTransaction().replace(R.id.fragment, new LogIn()).commit();
                         }
                     }
-                } else
+                } else {
+                    CircularFillableLoaders circularFillableLoaders = (CircularFillableLoaders)view.findViewById(R.id.circularFillableLoaders);
+                    circularFillableLoaders.setProgress(0);
                     Toast.makeText(getContext(), "NO network..Enable and RESTART APP", Toast.LENGTH_LONG).show();
+
+                }
             }
         };
         handler.postDelayed(runnable, 1500);

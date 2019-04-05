@@ -105,7 +105,7 @@ public class LogIn extends Fragment {
             inputLayoutId.setError("Invalid Mobile Num");
             if(!is_Valid_Password(pass))
                 inputLayoutPassword.setError("Invalid Password");
-            Toast.makeText(getContext(), "Wrong Number", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getContext(), "Wrong Number", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -139,11 +139,6 @@ public class LogIn extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-    }
 
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) Objects.requireNonNull(getActivity()).getSystemService(Context.CONNECTIVITY_SERVICE);
