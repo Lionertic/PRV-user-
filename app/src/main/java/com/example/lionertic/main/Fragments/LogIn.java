@@ -103,7 +103,7 @@ public class LogIn extends Fragment {
             }
         else {
             inputLayoutId.setError("Invalid Mobile Num");
-            if(!is_Valid_Password(pass))
+            if (!is_Valid_Password(pass))
                 inputLayoutPassword.setError("Invalid Password");
 //            Toast.makeText(getContext(), "Wrong Number", Toast.LENGTH_LONG).show();
         }
